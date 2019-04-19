@@ -645,5 +645,5 @@ class RFBDes(pyDes.des):
             for i in range(8):
                 if bsrc & (1 << i):
                     btgt = btgt | (1 << 7 - i)
-            newkey.append(chr(btgt))
+            newkey.append(btgt)
         super(RFBDes, self).setKey(newkey)

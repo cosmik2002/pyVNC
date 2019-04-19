@@ -11,9 +11,7 @@ logger = logging.getLogger("pyVNC")
 class Client(Thread):
     def __init__(self, host="127.0.0.1", password=None, port=5902, depth=32, fast=False, shared=True, gui=False, array=False, callbacks=[]):
         Thread.__init__(self)
-        pygame.init()
         self.has_gui = gui
-        self.screen = DisplayBuffer(array) if gui else ArrayBuffer()
         self.host = host
         self.password = password
         self.port = port
@@ -21,7 +19,8 @@ class Client(Thread):
         self.fast = fast
         self.shared = shared
         self.callbacks = callbacks
-
+        self.gui_array = array
+        self.screen = None
     def send_key(self, key, duration=0.001):
         if key in constants.MODIFIERS:
             self.screen.protocol.key_event(constants.MODIFIERS[key], down=1)
@@ -102,4 +101,6 @@ class Client(Thread):
         reactor.run(installSignalHandlers=False)
 
     def run(self):
+        pygame.init()
+        self.screen = DisplayBuffer(self.gui_array) if self.has_gui else ArrayBuffer()
         self.run_block()

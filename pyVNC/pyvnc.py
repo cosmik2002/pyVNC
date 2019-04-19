@@ -2,6 +2,8 @@
 import argparse
 
 from pyVNC.Client import Client
+import time
+from PIL import Image
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -19,9 +21,17 @@ if __name__ == '__main__':
                     depth=args.depth,
                     fast=args.fast,
                     shared=args.shared,
-                    gui=True,
-                    gui_with_array=False
+                    gui=True,array=True
                  )
     vnc.start()
+    time.sleep(1)
+    vnc.send_key("a") # Sends the key "a"
+    vnc.send_mouse("Left", (50, 50)) # Left Clicks at x=200, y=200
+    vnc.send_mouse("Right", (50, 50)) # Right Clicks at x=200, y=200
+    time.sleep(2)
+    ar = vnc.screen.get_array() # Get a array representation of the screen shape: (?, ?, 3)
+    im = Image.fromarray(ar)
+    im.save("ag.jpg")
+    vnc.join() # Exit
 
 
